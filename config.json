@@ -1,6 +1,6 @@
 {
-    "sonarr_svr" : "URL_TO_SONARR",
-    "sonarr_apikey" : "API_KEY",
-    "radarr_svr" : "URL_TO_RADARR",
-    "radarr_api_key" : "API_KEY"
+    "SONARR_HOST" : "URL_TO_SONARR",
+    "SONARR_API_KEY" : "API_KEY",
+    "RADARR_HOST" : "URL_TO_RADARR",
+    "RADARR_API_KEY" : "API_KEY"
 }

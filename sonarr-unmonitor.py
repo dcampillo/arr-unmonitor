@@ -14,18 +14,18 @@ import json
 from os import environ, path
 
 SONARR_API_KEY = ""
-SONARR_SVR = ""
+SONARR_HOST = ""
 
 def getEpisode(episodeID):
     apireq = "{0}/api/episode/{1}?apikey={2}"
-    rep = requests.get(apireq.format(SONARR_SVR, episodeID, SONARR_API_KEY))
+    rep = requests.get(apireq.format(SONARR_HOST, episodeID, SONARR_API_KEY))
     return rep.json()
 
 def setMonitoring(episodeID, MonitorStatus):
     apireq = "{0}/api/episode/{1}?apikey={2}"
     data = {'monitored' : MonitorStatus, 'Id' : episodeID}
     payload = {'json_payload': json.dumps(data)}
-    rep = requests.put(apireq.format(SONARR_SVR, episodeID, SONARR_API_KEY), data=json.dumps(data))
+    rep = requests.put(apireq.format(SONARR_HOST, episodeID, SONARR_API_KEY), data=json.dumps(data))
 
 def readConfig(config_file_path):
     with open(config_file_path, "r") as f:
@@ -35,8 +35,8 @@ def readConfig(config_file_path):
 if os.path.isfile(sys.argv[1]):
     try:
         config = readConfig(sys.argv[1])
-        SONARR_API_KEY = config["sonarr_apikey"]
-        SONARR_SVR = config["sonarr_svr"]
+        SONARR_API_KEY = config["SONARR_API_KEY"]
+        SONARR_HOST = config["SONARR_HOST"]
     except:
         print("An error occured while loading config file")
         sys.exit(-1)
