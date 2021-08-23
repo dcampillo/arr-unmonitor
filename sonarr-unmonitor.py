@@ -7,7 +7,7 @@
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 
-import os, time, shutil, sys, syslog
+import os, time, shutil, sys, logging
 import requests, json
 import json
 
@@ -43,7 +43,7 @@ if os.path.isfile(sys.argv[1]):
 
 EventType = environ.get('sonarr_eventtype')
 if EventType == 'Test':
-    syslog.syslog(syslog.LOG_INFO, "Episode Unmonitor script testing")
+    logging.info("Episode Unmonitor script testing")
 else:
     epId = environ.get('sonarr_episodefile_episodeids')
     serieTitle = environ.get("sonarr_series_title")
@@ -53,4 +53,4 @@ else:
 
     setMonitoring(epId, False)
     logMsg = "Sonarr post-import: '{0} S{1:0>2d}E{2:0>2d} {3}' unmonitored!"
-    syslog.syslog(syslog.LOG_INFO, logMsg.format(serieTitle, epSeason, epNumber, epTitle))
+    logging.info(logMsg.format(serieTitle, epSeason, epNumber, epTitle))
