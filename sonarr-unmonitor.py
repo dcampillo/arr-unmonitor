@@ -27,13 +27,19 @@ def setMonitoring(episodeID, MonitorStatus):
     payload = {'json_payload': json.dumps(data)}
     rep = requests.put(apireq.format(SONARR_SVR, episodeID, SONARR_API_KEY), data=json.dumps(data))
 
-def loadConfig(config_file_path):
+def readConfig(config_file_path):
     with open(config_file_path, "r") as f:
         return json.load(f)
 
-config = loadConfig("zorglub.json")
-SONARR_API_KEY = config["sonarr_apikey"]
-SONARR_SVR = config["sonarr_svr"]
+# if a  json confile file argument is used, the local settings are overriden
+if os.path.isfile(sys.argv[1]):
+    try:
+        config = readConfig(sys.argv[1])
+        SONARR_API_KEY = config["sonarr_apikey"]
+        SONARR_SVR = config["sonarr_svr"]
+    except:
+        print("An error occured while loading config file")
+        sys.exit(-1)
 
 EventType = environ.get('sonarr_eventtype')
 if EventType == 'Test':
@@ -46,5 +52,5 @@ else:
     epTitle = environ.get("sonarr_episodefile_episodetitles")
 
     setMonitoring(epId, False)
-    logMsg = "Sonarr post-import: {0} S{1:0>2d}E{2:0>2d} {3} unmonitored!"
+    logMsg = "Sonarr post-import: '{0} S{1:0>2d}E{2:0>2d} {3}' unmonitored!"
     syslog.syslog(syslog.LOG_INFO, logMsg.format(serieTitle, epSeason, epNumber, epTitle))
