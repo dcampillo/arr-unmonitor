@@ -5,10 +5,18 @@ Sonarr/Radarr custom scripts to unomitor episodes or movie after import.
 - Python 3.x is recommended
 - The script have been tested with Python 3.8.x and  3.9.x
 
-# Installation
+## Installation
 You can use the script with or without a configuration file:
-1. With a configuration:
+
+### With a configuration file:
+1. Use the config.json provided in the repository
+2. Update the variables:
+3.  'sonarr_svr' and 'sonarr_apikey' for Sonarr
+4.  'radarr_svr' and 'radarr_apikey' for Radarr
  
+### Without a configuration file
+1. Update variable 'sonarr_svr' and 'sonarr_apikey' in "sonarr-unmonitor.py" for Sonarr
+2. Update variable "sonarr-unmonitor.py" for Sonarr
 
 ## sonnarr-unmonitor
 
