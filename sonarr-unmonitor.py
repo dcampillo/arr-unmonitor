@@ -3,7 +3,7 @@
 # Unmonitor Script for Sonarr
 # Author : MadSurfer
 # Date : 22.08.2021
-# Version : 0.1
+# Version : 0.2
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 
@@ -23,7 +23,9 @@ def getEpisode(episodeID):
 
 def setMonitoring(episodeID, MonitorStatus):
     apireq = "{0}/api/episode/{1}?apikey={2}"
-    data = {'monitored' : MonitorStatus, 'Id' : episodeID}
+    #data = {'monitored' : MonitorStatus, 'Id' : episodeID}
+    data = getEpisode(episodeID)
+    data["monitored"] = MonitorStatus
     payload = {'json_payload': json.dumps(data)}
     rep = requests.put(apireq.format(SONARR_HOST, episodeID, SONARR_API_KEY), data=json.dumps(data))
 
