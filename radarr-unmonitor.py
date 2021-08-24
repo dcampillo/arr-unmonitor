@@ -9,7 +9,7 @@
 
 import os, time, shutil, sys, logging
 import requests, json
-import syslog
+import logging
 
 from os import environ, path
 
@@ -21,16 +21,11 @@ def getMovie(movieID):
     rep = requests.get(apireq.format(RADARR_HOST, movieID, RADARR_API_KEY))
     return rep.json()
 
-def setMonitoring(movieID, qualityId, moviePath, MonitorStatus):
+def setMonitoring(movieID, MonitoringStatus):
     apireq = "{0}/api/v3/movie/{1}?moveFiles=false&apikey={2}"
-    data = {'monitored' : MonitorStatus, 'id' : movieID, 'qualityProfileId' : qualityId, 'Path' : moviePath }
-    payload = {'json_payload': json.dumps(data)}
-
-    print(payload)
-    rep = requests.put(apireq.format(RADARR_HOST, movieID, RADARR_API_KEY), data=json.dumps(data))
-    print(rep.json())
-    syslog.syslog(syslog.LOG_ERR, str(movieID))
-    syslog.syslog(syslog.LOG_ERR, str(environ))
+    movieItem = getMovie(movieID)
+    movieItem["monitored"] = MonitoringStatus
+    rep = requests.put(apireq.format(RADARR_HOST, movieID, RADARR_API_KEY), data=json.dumps(movieItem))
 
 def readConfig(config_file_path):
     with open(config_file_path, "r") as f:
@@ -48,18 +43,9 @@ if len(sys.argv) > 1:
             sys.exit(-1)
 
 EventType = environ.get('sonarr_eventtype')
-movieId = 1254
 if EventType == 'Test':
     logging.info("Episode Unmonitor script testing")
 else:
-    #movieId = environ.get("radarr_movie_id")
+    movieId = environ.get("radarr_movie_id")
     if movieId:
-        mov = getMovie(movieId)
-        print(mov)
-        qualityProfileId = mov["qualityProfileId"]
-        moviePath = mov["path"]
-        print(qualityProfileId)
-        print(moviePath)
-        setMonitoring(movieId, qualityProfileId, moviePath, False)
-
-    #logging.info(logMsg.format(serieTitle, epSeason, epNumber, epTitle))
+        setMonitoring(movieId, False)
