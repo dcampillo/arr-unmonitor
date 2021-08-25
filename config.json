@@ -1,6 +1,0 @@
-{
-    "SONARR_HOST" : "URL_TO_SONARR",
-    "SONARR_API_KEY" : "API_KEY",
-    "RADARR_HOST" : "URL_TO_RADARR",
-    "RADARR_API_KEY" : "API_KEY"
-}
