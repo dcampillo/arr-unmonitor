@@ -34,14 +34,15 @@ def readConfig(config_file_path):
         return json.load(f)
 
 # if a  json confile file argument is used, the local settings are overriden
-if os.path.isfile(sys.argv[1]):
-    try:
-        config = readConfig(sys.argv[1])
-        SONARR_API_KEY = config["SONARR_API_KEY"]
-        SONARR_HOST = config["SONARR_HOST"]
-    except:
-        print("An error occured while loading config file")
-        sys.exit(-1)
+if len(sys.argv) > 1:
+    if os.path.isfile(sys.argv[1]):
+        try:
+            config = readConfig(sys.argv[1])
+            SONARR_API_KEY = config["SONARR_API_KEY"]
+            SONARR_HOST = config["SONARR_HOST"]
+        except:
+            print("An error occured while loading config file")
+            sys.exit(-1)
 
 EventType = environ.get('sonarr_eventtype')
 if EventType == 'Test':
