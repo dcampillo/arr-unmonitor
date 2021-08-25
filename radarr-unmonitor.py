@@ -3,7 +3,7 @@
 # Unmonitor Script for Radarr
 # Author : MadSurfer
 # Date : 23.08.2021
-# Version : 0.2.2
+# Version : 0.4
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 

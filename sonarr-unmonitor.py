@@ -3,7 +3,7 @@
 # Unmonitor Script for Sonarr
 # Author : MadSurfer
 # Date : 22.08.2021
-# Version : 0.3.1
+# Version : 0.4
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 
