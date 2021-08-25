@@ -1,4 +1,4 @@
-# arr-unmonitor
+# Arr-Unmonitor
 Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 
 ## Requirements
