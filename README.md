@@ -1,5 +1,5 @@
 # arr-unmonitor
-Sonarr/Radarr custom scripts to unomitor episodes or movie after import.
+Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 
 ## Requirements
 - Python 3.x is recommended
