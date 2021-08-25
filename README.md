@@ -1,5 +1,5 @@
 # arr-unmonitor
-Sonarr/Radarr custom scripts to unomitor episodes or movie after import.
+Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 
 ## Requirements
 - Python 3.x is recommended
@@ -8,16 +8,14 @@ Sonarr/Radarr custom scripts to unomitor episodes or movie after import.
 ## Installation
 You can use the script with or without a configuration file:
 
-### With a configuration file:
-1. Use the config.json provided in the repository
-2. Update the variables:
-3.  'SONARR_HOST' and 'SONARR_API_KEY' for Sonarr
-4.  'RADARR_HOST' and 'RADARR_API_KEY' for Radarr
- 
-### Without a configuration file
-1. Update variable 'SONARR_HOST' and 'SONARR_API_KEY' in "sonarr-unmonitor.py" for Sonarr
-2. Update variable 'RADARR_HOST' and 'RADARR_API_KEY' in "sonarr-unmonitor.py" for Radarr
+1. Place the scripts in a folder accessible by Radarr or Sonarr
+2. !! For "Linux", make the script executable
+3. Update variable 'SONARR_HOST' and 'SONARR_API_KEY' in "sonarr-unmonitor.py" for Sonarr
+4. Update variable 'RADARR_HOST' and 'RADARR_API_KEY' in "radarr-unmonitor.py" for Radarr
 
-## sonnarr-unmonitor
-
-## radarr-unmonitor
+## Sonarr / Radarr configuration
+1. Add a new connection (Settings -> Connections -> Custom Scripts)
+2. Give a name to your connection
+3. Check the Notification Trigger "on import"
+4. Select your script
+5. If the script is accessible/executable by Sonarr/Radarr, you should see a green "Check" after clicking on the button "Test"
