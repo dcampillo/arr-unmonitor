@@ -7,9 +7,7 @@
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 
-import os, time, shutil, sys, logging
-import requests, json
-import logging
+import logging, requests, json
 
 from os import environ, path
 
