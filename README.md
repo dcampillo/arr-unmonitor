@@ -6,8 +6,7 @@ Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 - The script have been tested with Python 3.8.x and  3.9.x
 
 ## Installation
-Requireds dependencies are listed in requirements.txt
-- to install the dependencies: `pip install -r requirements.txt`
+Starting with version 0.7b, all external requirements have been removed
 
 You can use the script with or without a configuration file:
 
