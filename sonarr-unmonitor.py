@@ -56,18 +56,20 @@ def main():
         print("Checking config")
         if ARR_API_KEY != "":
             print("CONFIG_CHECK: API key is present")
+        else:
+            sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!")
+            sys.exit("CONFIG_CHECK_ERROR")
 
-            if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
-                print("CONFIG_CHECK HOST: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
-            else:
-                sys.stderr.write("CONFIG_CHECK_ERROR: {hostcheck} is NOT VALID!".format(hostcheck=ARR_HOST))
-                sys.exit("CONFIG_CHECK_ERROR")
+        if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
+            print("CONFIG_CHECK HOST: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
+        else:
+            sys.stderr.write("CONFIG_CHECK_ERROR: {hostcheck} is NOT VALID!".format(hostcheck=ARR_HOST))
+            sys.exit("CONFIG_CHECK_ERROR")
     else:
         epId = environ.get('sonarr_episodefile_episodeids')
         if epId:
             setMonitoring(epId, False)
-            logMsg = "Sonarr post-import: Episode ID = {0}"
-            logging.info(logMsg.format(epId))
+            print("Sonarr post-import: Episode ID = {episodeid}".format(episodeid=epId))
 
 if __name__ == "__main__":
     main()

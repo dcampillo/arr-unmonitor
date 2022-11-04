@@ -59,8 +59,9 @@ def main():
         if ARR_API_KEY != "":
             print("CONFIG_CHECK: API key is present")
         else:
-            sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!".format(hostcheck=ARR_HOST))
+            sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!")
             sys.exit("CONFIG_CHECK_ERROR")
+
         if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
             print("CONFIG_CHECK: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
         else:
@@ -71,7 +72,7 @@ def main():
         movieId = environ.get("radarr_movie_id")
         if movieId:
             setMonitoring(movieId, False)
-            print("Movie ID {movieid} unmonitored!".format(movieId=movieId))
+            print("Movie ID {movieid} unmonitored!".format(movieid=movieId))
 
 if __name__ == "__main__":
     main()
