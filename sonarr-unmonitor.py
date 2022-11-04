@@ -2,8 +2,8 @@
 ###################################
 # Unmonitor Script for Sonarr
 # Author : MadSurfer
-# Date : 01.11.2021
-# Version : 0.7
+# Date : 04.11.2021
+# Version : 0.8
 # Description : Automatically unmonitor episde on "Import"
 ###################################
 
@@ -58,7 +58,7 @@ def main():
             print("CONFIG_CHECK: API key is present")
 
             if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
-                print("CONFIG_CHECK: {hostcheck} is valid!".format(hostcheck=ARR_HOST))
+                print("CONFIG_CHECK HOST: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
             else:
                 sys.stderr.write("CONFIG_CHECK_ERROR: {hostcheck} is NOT VALID!".format(hostcheck=ARR_HOST))
                 sys.exit("CONFIG_CHECK_ERROR")
