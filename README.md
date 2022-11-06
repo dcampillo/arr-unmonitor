@@ -1,3 +1,4 @@
+
 # Arr-Unmonitor
 Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 
@@ -8,10 +9,14 @@ Sonarr/Radarr custom scripts to unmomitor episodes or movies after import.
 ## Installation
 Update each script accordingly:
 
-1. Place the scripts in a folder accessible by Radarr or Sonarr
-2. !! For "Linux", make the script executable
-3. Update setting 'ARR_HOST' with a valid URL with 'http://' or 'https://'
-4. Update setting 'ARR_API_KEY' with the corresponding KEY
+ 1. Place the scripts in a folder accessible by Radarr or Sonarr
+ 2. !! For "Linux", make the script executable
+ 3. Settings to be set in the script:
+	 1. ARR_API_KEY = ""
+	 2. ARR_HOST = "" # example : my.domain.info
+	 3. ARR_PORT = "" # default Radarr port = 7878
+	 5. ARR_USE_SSL = False # Default = False, if set to True, configure the ARR_PORT appropriately
+	 6. ARR_CHECK_SSL = True # Default = True, ARR will check the validity of the SSL Certificate
 
 
 ## Sonarr / Radarr configuration
