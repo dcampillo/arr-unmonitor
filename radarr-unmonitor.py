@@ -67,10 +67,10 @@ def main():
             sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!")
             sys.exit("CONFIG_CHECK_ERROR")
 
-        if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
-            print("CONFIG_CHECK: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
+        if ARR_PORT != "":
+            print("CONFIG_CHECK: PORT is set!")
         else:
-            sys.stderr.write("CONFIG_CHECK HOST: '{hostcheck}' is a NOT VALID HOST!".format(hostcheck=ARR_HOST))
+            sys.stderr.write("CONFIG_CHECK ERROR API_KEY: ARR_PORT '' is a NOT VALID API PORT!")
             sys.exit("CONFIG_CHECK_ERROR")
 
     else:

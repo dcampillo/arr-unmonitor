@@ -67,11 +67,12 @@ def main():
             sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!")
             sys.exit("CONFIG_CHECK_ERROR")
 
-        if re.match("^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$", ARR_HOST):
-            print("CONFIG_CHECK HOST: '{hostcheck}' is valid!".format(hostcheck=ARR_HOST))
+        if ARR_PORT != "":
+            print("CONFIG_CHECK: PORT is set!")
         else:
-            sys.stderr.write("CONFIG_CHECK_ERROR: {hostcheck} is NOT VALID!".format(hostcheck=ARR_HOST))
+            sys.stderr.write("CONFIG_CHECK ERROR ARR_PORT: ARR_PORT '' is a NOT VALID API PORT!")
             sys.exit("CONFIG_CHECK_ERROR")
+
     else:
         epId = environ.get('sonarr_episodefile_episodeids')
         if epId:
