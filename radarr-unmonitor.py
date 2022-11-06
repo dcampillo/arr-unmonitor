@@ -14,14 +14,19 @@ from urllib.error import HTTPError, URLError
 from os import environ, path
 
 ARR_API_KEY = ""
-ARR_HOST = ""
+ARR_HOST = "" # example : my.domain.info
+ARR_PORT = "" # default Radarr port = 7878
 REQ_HEADERS = {'X-Api-Key': ARR_API_KEY, 'Content-Type': 'application/json'}
-ARR_USE_SSL = False
+ARR_USE_SSL = False # Default = False, if set to True, configure the ARR_PORT appropriately
+ARR_CHECK_SSL = True # Default = True, ARR will check the validity of the SSL Certificate
 
 def getMovie(movieID):
-    apireq = "{0}/api/v3/movie/{1}".format(ARR_HOST, movieID)
     if ARR_USE_SSL:
-        ssl._create_default_https_context = ssl._create_unverified_context
+        apireq = "https://{host}:{port}/api/v3/movie/{movieid}".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
+        if ARR_CHECK_SSL == False:
+            ssl._create_default_https_context = ssl._create_unverified_context
+    else:
+        apireq = "http://{host}:{port}/api/v3/movie/{movieid}".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
 
     request = Request(method='GET', headers=REQ_HEADERS, url=apireq)
     
