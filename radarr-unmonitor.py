@@ -2,9 +2,10 @@
 ###################################
 # Unmonitor Script for Radarr
 # Author : MadSurfer
-# Date : 04.11.2021
-# Version : 0.8
+# Date : 06.11.2021
+# Version : 0.9
 # Description : Automatically unmonitor movie on "Import"
+# Release note: Import changes in the configuration of the script!!!
 ###################################
 
 import logging, json, ssl, re, sys
@@ -35,7 +36,11 @@ def getMovie(movieID):
     return MovieData
 
 def setMonitoring(movieID, MonitoringStatus):
-    apireq = "{0}/api/v3/movie/{1}?moveFiles=false".format(ARR_HOST, movieID)
+    if ARR_USE_SSL:
+        apireq = "https://{host}:{port}/api/v3/movie/{movieid}?moveFiles=false".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
+    else:
+        apireq = "http://{host}:{port}/api/v3/movie/{movieid}?moveFiles=false".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
+
     try:
         movieItem = getMovie(movieID)
         if movieItem:
@@ -70,7 +75,7 @@ def main():
         if ARR_PORT != "":
             print("CONFIG_CHECK: PORT is set!")
         else:
-            sys.stderr.write("CONFIG_CHECK ERROR API_KEY: ARR_PORT '' is a NOT VALID API PORT!")
+            sys.stderr.write("CONFIG_CHECK ERROR ARR_PORT: ARR_PORT '' is a NOT VALID API PORT!")
             sys.exit("CONFIG_CHECK_ERROR")
 
     else:

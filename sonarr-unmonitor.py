@@ -2,9 +2,10 @@
 ###################################
 # Unmonitor Script for Sonarr
 # Author : MadSurfer
-# Date : 04.11.2021
-# Version : 0.8
+# Date : 06.11.2021
+# Version : 0.9
 # Description : Automatically unmonitor episde on "Import"
+# Release note: Import changes in the configuration of the script!!!
 ###################################
 
 import logging, json, ssl, re, sys
@@ -34,7 +35,11 @@ def getEpisode(episodeID):
     return epData
 
 def setMonitoring(episodeID, MonitorStatus):
-    apireq = "{0}/api/episode/{1}".format(ARR_HOST, episodeID)
+    if ARR_USE_SSL:
+        apireq = "https://{host}:{port}/api/episode/{epid}".format(host=ARR_HOST, port=ARR_PORT, epid=episodeID)
+    else:
+        apireq = "http://{host}:{port}/api/episode/{epid}".format(host=ARR_HOST, port=ARR_PORT, epid=episodeID)
+    
     try:
         episodeInfos = getEpisode(episodeID)
         if episodeInfos:
