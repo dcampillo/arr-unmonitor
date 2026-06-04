@@ -14,8 +14,9 @@ from urllib.error import HTTPError, URLError
 from os import environ
 
 # --- Configuration --------------------------------------------------------
-# Edit the values below, or override any of them via environment variables
-# of the same name (the environment value takes precedence).
+# Edit the values below. ARR_API_KEY, ARR_HOST and ARR_PORT can also be
+# overridden via environment variables of the same name (the environment value
+# takes precedence). ARR_USE_SSL / ARR_CHECK_SSL are set here only.
 ARR_API_KEY = ""  # set your API key here (or via the ARR_API_KEY env var)
 ARR_HOST = ""     # example : my.domain.info (or ARR_HOST env var)
 ARR_PORT = ""     # default Sonarr port = 8989 (or ARR_PORT env var)
@@ -105,7 +106,11 @@ def main():
     else:
         rawIds = environ.get('sonarr_episodefile_episodeids')
         if rawIds:
-            episodeIds = parseEpisodeIds(rawIds)
+            try:
+                episodeIds = parseEpisodeIds(rawIds)
+            except ValueError as err:
+                sys.stderr.write("SONARR_UNMONITOR: Invalid episode id list '{raw}': {err}".format(raw=rawIds, err=err))
+                sys.exit(1)
             if episodeIds:
                 setMonitoring(episodeIds, False)
                 print("Sonarr post-import: Episode IDs = {epids} unmonitored!".format(epids=episodeIds))

@@ -5,7 +5,7 @@
 # Date : 06.11.2021
 # Version : 1.0
 # Description : Automatically unmonitor movie on "Import"
-# Release note: Uses Radarr API v3. See README / CHANGELOG.
+# Release note: Uses Radarr API v3. See README.
 ###################################
 
 import json, ssl, sys
@@ -14,8 +14,9 @@ from urllib.error import HTTPError, URLError
 from os import environ
 
 # --- Configuration --------------------------------------------------------
-# Edit the values below, or override any of them via environment variables
-# of the same name (the environment value takes precedence).
+# Edit the values below. ARR_API_KEY, ARR_HOST and ARR_PORT can also be
+# overridden via environment variables of the same name (the environment value
+# takes precedence). ARR_USE_SSL / ARR_CHECK_SSL are set here only.
 ARR_API_KEY = ""  # set your API key here (or via the ARR_API_KEY env var)
 ARR_HOST = ""     # example : my.domain.info (or ARR_HOST env var)
 ARR_PORT = ""     # default Radarr port = 7878 (or ARR_PORT env var)
