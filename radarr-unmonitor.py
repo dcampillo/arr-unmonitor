@@ -3,64 +3,84 @@
 # Unmonitor Script for Radarr
 # Author : MadSurfer
 # Date : 06.11.2021
-# Version : 0.9
+# Version : 1.0
 # Description : Automatically unmonitor movie on "Import"
-# Release note: Import changes in the configuration of the script!!!
+# Release note: Uses Radarr API v3. See README / CHANGELOG.
 ###################################
 
-import logging, json, ssl, re, sys
+import json, ssl, sys
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
+from os import environ
 
-from os import environ, path
+# --- Configuration --------------------------------------------------------
+# Edit the values below, or override any of them via environment variables
+# of the same name (the environment value takes precedence).
+ARR_API_KEY = ""  # set your API key here (or via the ARR_API_KEY env var)
+ARR_HOST = ""     # example : my.domain.info (or ARR_HOST env var)
+ARR_PORT = ""     # default Radarr port = 7878 (or ARR_PORT env var)
+ARR_USE_SSL = False   # Default = False, if set to True, configure ARR_PORT appropriately
+ARR_CHECK_SSL = True  # Default = True, verify the validity of the SSL certificate
 
-ARR_API_KEY = ""
-ARR_HOST = "" # example : my.domain.info
-ARR_PORT = "" # default Radarr port = 7878
+# Environment variables take precedence over the in-file values above
+ARR_API_KEY = environ.get("ARR_API_KEY", ARR_API_KEY)
+ARR_HOST = environ.get("ARR_HOST", ARR_HOST)
+ARR_PORT = environ.get("ARR_PORT", ARR_PORT)
+
 REQ_HEADERS = {'X-Api-Key': ARR_API_KEY, 'Content-Type': 'application/json'}
-ARR_USE_SSL = False # Default = False, if set to True, configure the ARR_PORT appropriately
-ARR_CHECK_SSL = True # Default = True, ARR will check the validity of the SSL Certificate
+REQ_TIMEOUT = 30  # seconds
+# --------------------------------------------------------------------------
+
+
+def getSslContext():
+    """Return an SSLContext with verification disabled when requested, else None."""
+    if ARR_USE_SSL and not ARR_CHECK_SSL:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
+    return None
+
+
+def buildUrl(pathAndQuery):
+    scheme = "https" if ARR_USE_SSL else "http"
+    return "{scheme}://{host}:{port}/api/v3/{path}".format(
+        scheme=scheme, host=ARR_HOST, port=ARR_PORT, path=pathAndQuery)
+
 
 def getMovie(movieID):
-    if ARR_USE_SSL:
-        apireq = "https://{host}:{port}/api/v3/movie/{movieid}".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
-        if ARR_CHECK_SSL == False:
-            ssl._create_default_https_context = ssl._create_unverified_context
-    else:
-        apireq = "http://{host}:{port}/api/v3/movie/{movieid}".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
+    request = Request(method='GET', headers=REQ_HEADERS,
+                      url=buildUrl("movie/{movieid}".format(movieid=movieID)))
+    rep = urlopen(request, timeout=REQ_TIMEOUT, context=getSslContext())
+    return json.load(rep)
 
-    request = Request(method='GET', headers=REQ_HEADERS, url=apireq)
-    
-    rep = urlopen(request)
-    MovieData = json.load(rep)
-    return MovieData
 
 def setMonitoring(movieID, MonitoringStatus):
-    if ARR_USE_SSL:
-        apireq = "https://{host}:{port}/api/v3/movie/{movieid}?moveFiles=false".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
-    else:
-        apireq = "http://{host}:{port}/api/v3/movie/{movieid}?moveFiles=false".format(host=ARR_HOST, port=ARR_PORT, movieid=movieID)
-
     try:
         movieItem = getMovie(movieID)
         if movieItem:
             movieItem["monitored"] = MonitoringStatus
-            request = Request(method='PUT', headers=REQ_HEADERS, data=json.dumps(movieItem).encode('utf-8'), url=apireq)
-            rep = urlopen(request)
-            sys.stdout.write("RADARR_UNMONITOR: EpisodeID:{movieid} - Unmonitored".format(movieid=movieID))
+            request = Request(method='PUT', headers=REQ_HEADERS,
+                              data=json.dumps(movieItem).encode('utf-8'),
+                              url=buildUrl("movie/{movieid}?moveFiles=false".format(movieid=movieID)))
+            urlopen(request, timeout=REQ_TIMEOUT, context=getSslContext())
+            sys.stdout.write("RADARR_UNMONITOR: MovieID:{movieid} - Unmonitored".format(movieid=movieID))
         else:
-            print("Episode not found")
+            sys.stderr.write("RADARR_UNMONITOR: MovieID:{movieid} - Movie not found".format(movieid=movieID))
+            sys.exit(1)
 
     except HTTPError as err:
-        sys.stderr.write("RADARR_UNMONITOR: EpisodeID:{movieid} - HTTP{httpcode} - {reason}".format(movieid=movieID, httpcode=err.code, reason=err.reason))
+        sys.stderr.write("RADARR_UNMONITOR: MovieID:{movieid} - HTTP{httpcode} - {reason}".format(movieid=movieID, httpcode=err.code, reason=err.reason))
         sys.exit(1)
 
     except URLError as err:
-        sys.stderr.write("RADARR_UNMONITOR: EpisodeID:{movieid} - Error: {reason} | Check script configuration ARR_HOST setting".format(movieid=movieID, reason=err.reason))
+        sys.stderr.write("RADARR_UNMONITOR: MovieID:{movieid} - Error: {reason} | Check script configuration ARR_HOST setting".format(movieid=movieID, reason=err.reason))
         sys.exit(1)
 
     except Exception as err:
-        sys.stderr.write("RADARR_UNMONITOR: Unknow Error RRRRRRRRRR")
+        sys.stderr.write("RADARR_UNMONITOR: MovieID:{movieid} - Unknown error: {err}".format(movieid=movieID, err=err))
+        sys.exit(1)
+
 
 def main():
     EventType = environ.get('radarr_eventtype')
@@ -70,6 +90,12 @@ def main():
             print("CONFIG_CHECK: API key is present")
         else:
             sys.stderr.write("CONFIG_CHECK API_KEY: API Key '' is a NOT VALID API KEY!")
+            sys.exit("CONFIG_CHECK_ERROR")
+
+        if ARR_HOST != "":
+            print("CONFIG_CHECK: HOST is set!")
+        else:
+            sys.stderr.write("CONFIG_CHECK ERROR ARR_HOST: ARR_HOST '' is a NOT VALID HOST!")
             sys.exit("CONFIG_CHECK_ERROR")
 
         if ARR_PORT != "":
@@ -83,6 +109,7 @@ def main():
         if movieId:
             setMonitoring(movieId, False)
             print("Movie ID {movieid} unmonitored!".format(movieid=movieId))
+
 
 if __name__ == "__main__":
     main()
